@@ -1,0 +1,94 @@
+:root {
+    /* Paleta de colores */
+    --bodybackgroundcolor: #f4f4f4;
+    --background-color: #f4f4f4;
+
+    --primary-color: #42b883;
+    --primary-color-hover: #339a6d;
+
+    --secondary-color: #347474;
+    --secondary-color-hover: #2b5d5d;
+
+    --white-color: #fff;
+
+    /* Tipografía */
+    --font-color: #333;
+    --font-color-light: #666;
+
+    --primary-font-size: 2em;
+    --primary-font-weight: 600;
+    --primary-lletter-spacing: 1.5px;
+
+    --secondary-font-size: 1.5em;
+    --secondary-font-weight: 400;
+    --secondary-letter-spacing: 1px;
+
+    --font-color-p: #333;
+    --p-letter-spacing: 1.5px;
+
+
+    --font-size-h3: 2em;
+    --font-size-h4: 1.1em;
+    --font-size-h5: 1.5em;
+    --font-size-p: 0.9em;
+
+    --font-weight-h3: 700;
+    --font-weight-h4: 500;
+    --font-height-h5: 400;
+    --font-weight-p: 500;
+
+    /* Bordes y sombras */
+    --std-borderRadius: 10px;
+    --btn-borderRadius: 25px;
+    --std-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --hover-box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+
+    /* Botones de cantidad */
+    --quantity-button-padding: 10px;
+    --quantity-button-radius: 50%;
+    --quantity-button-font-size: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+a {
+    text-decoration: none;
+}
+
+main {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px;
+}
+
+section{
+    width: 100%;
+    min-height: 10vh;
+
+    border: 1px solid black;
+    box-shadow: var(--std-box-shadow);
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
