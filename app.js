@@ -1,7 +1,15 @@
 // app.js
-function loadModule() {
+
+// Función para cargar el módulo de header
+import { initHeader } from './src/modules/header.js';
+
+function loadModules() {
   const path = window.location.pathname;
 
+  // Inicializar el header
+  initHeader();
+
+  // Cargar el módulo específico según la página
   if (path.includes('login.html')) {
     import('./src/modules/login.js').then(module => module.initLogin());
   } else if (path.includes('register.html')) {
@@ -11,13 +19,11 @@ function loadModule() {
   } else if (path.includes('store.html')) {
     import('./src/modules/store.js').then(module => module.initStore());
   }
-
-  console.log("App.js cargado en", path);
 }
 
 // Solo cargamos cuando el DOM esté listo
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', loadModule);
+  document.addEventListener('DOMContentLoaded', loadModules);
 } else {
-  loadModule();
+  loadModules();
 }

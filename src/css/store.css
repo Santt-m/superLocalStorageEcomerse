@@ -1,10 +1,10 @@
 /* src/css/store.css */
-.store-container {
+.store-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 90vh;
+    min-height: 80vh;
     background-color: var(--third-color);
     padding: 20px;
 }
@@ -15,20 +15,17 @@
     text-align: center;
 }
 
+#storeContent {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
 .product-card {
     background-color: var(--primary-color);
     padding: 20px;
-    margin: 10px;
     border-radius: var(--std-borderRadius);
     box-shadow: var(--btnshadow);
     color: var(--white);
-}
-
-.product-card h3 {
-    font-size: 24px;
-}
-
-.product-card p {
-    font-size: 18px;
-    margin-top: 10px;
 }

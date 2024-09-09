@@ -3,22 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>App Ecommerce</title>
+  <title>Inicio</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./src/css/index.css">
 </head>
 <body>
+
   <header>
-    <h1>Bienvenido a la App de Ecommerce</h1>
-    <nav>
-      <a href="register.html">Registrarse</a>
+    <div class="logo">
+      <a href="index.html">Mi Tienda</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle">☰</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="store.html?tienda">Tienda</a>
+      <a href="register.html">Registro</a>
       <a href="login.html">Iniciar sesión</a>
+      <a href="user.html" id="user-link">Mi cuenta</a>
     </nav>
   </header>
 
   <main>
-    <p>Explora nuestras tiendas y servicios</p>
+    <section class="home-section">
+      <h1>Bienvenido a Mi Tienda</h1>
+      <p>Explora nuestros productos y crea tu propia tienda.</p>
+    </section>
   </main>
 
-  <script src="app.js" type="module"></script>
+  <script src="./app.js" type="module"></script>
 </body>
-</html>

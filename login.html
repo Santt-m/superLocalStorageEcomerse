@@ -4,18 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar sesión</title>
+  <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./src/css/login.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>Iniciar Sesión</h1>
-    <form id="loginForm" class="login-form">
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Contraseña" required>
-      <button type="submit" class="btn">Iniciar sesión</button>
-    </form>
-    <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
-  </div>
+
+  <header>
+    <div class="logo">
+      <a href="index.html">Mi Tienda</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle">☰</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="store.html?tienda">Tienda</a>
+      <a href="register.html">Registro</a>
+      <a href="login.html">Iniciar sesión</a>
+      <a href="user.html" id="user-link">Mi cuenta</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="login-section">
+      <h1>Iniciar Sesión</h1>
+      <form id="loginForm" class="login-form">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button type="submit" class="btn">Iniciar sesión</button>
+      </form>
+      <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+    </section>
+  </main>
+
+  <footer></footer>
 
   <script src="app.js" type="module"></script>
 </body>

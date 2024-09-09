@@ -1,16 +1,10 @@
 /* src/css/user.css */
-.user-container {
+.user-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    background-color: var(--third-color);
-}
-
-.user-header {
-    color: var(--white);
-    margin-bottom: 20px;
+    min-height: 80vh;
 }
 
 .user-store {
@@ -19,4 +13,7 @@
     border-radius: var(--std-borderRadius);
     box-shadow: var(--btnshadow);
     color: var(--white);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
 }

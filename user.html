@@ -4,19 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi cuenta</title>
+  <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./src/css/user.css">
 </head>
 <body>
-  <div class="user-container">
-    <h1 class="user-header">Mi Cuenta</h1>
-    <p>Bienvenido, <span id="username"></span></p>
-    <button id="createStore" class="btn">Crear mi tienda</button>
-    
-    <section id="storeSection" style="display:none;">
-      <h2>Mi Tienda</h2>
-      <p>Enlace a tu tienda: <span id="storeLink"></span></p>
+
+  <header>
+    <div class="logo">
+      <a href="index.html">Mi Tienda</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle">☰</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="store.html?tienda">Tienda</a>
+      <a href="register.html">Registro</a>
+      <a href="login.html">Iniciar sesión</a>
+      <a href="user.html" id="user-link">Mi cuenta</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="user-section">
+      <h1>Mi Cuenta</h1>
+      <p>Bienvenido, <span id="username"></span></p>
+      <button id="createStore" class="btn">Crear mi tienda</button>
+      <div id="storeSection" style="display:none;">
+        <h2>Mi Tienda</h2>
+        <p>Enlace a tu tienda: <span id="storeLink"></span></p>
+      </div>
     </section>
-  </div>
+  </main>
+
+  <footer></footer>
 
   <script src="app.js" type="module"></script>
 </body>
