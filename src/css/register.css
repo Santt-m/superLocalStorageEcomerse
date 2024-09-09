@@ -1,0 +1,30 @@
+/* src/css/register.css */
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: var(--secondary-color);
+}
+
+.register-form {
+    background-color: var(--primary-color);
+    padding: 30px;
+    border-radius: var(--std-borderRadius);
+    box-shadow: var(--btnshadow);
+    color: var(--white);
+}
+
+.register-form input {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid var(--black);
+    border-radius: var(--btnborderradius);
+}
+
+.register-form button {
+    width: 100%;
+    padding: 10px;
+}
