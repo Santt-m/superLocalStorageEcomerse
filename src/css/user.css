@@ -1,19 +1,35 @@
-/* src/css/user.css */
-.user-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 80vh;
+/* Estilos de la página de usuario */
+.user-section, .services-section, .stores-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1px solid var(--font-color-light);
+  border-radius: var(--std-borderRadius);
 }
 
-.user-store {
-    background-color: var(--primary-color);
-    padding: 20px;
-    border-radius: var(--std-borderRadius);
-    box-shadow: var(--btnshadow);
-    color: var(--white);
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
+#profile-info {
+  margin-bottom: 30px;
+}
+
+#company-list div {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid var(--font-color-light);
+  border-radius: var(--std-borderRadius);
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  cursor: pointer;
+  border-radius: var(--std-borderRadius);
+}
+
+.btn:hover {
+  background-color: var(--primary-color-hover);
 }

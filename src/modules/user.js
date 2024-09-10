@@ -1,53 +1,74 @@
 // src/modules/user.js
-function createStore() {
-  const user = JSON.parse(localStorage.getItem('loggedInUser'));
-  const storeName = prompt('Escribe el nombre de tu tienda:');
-  if (storeName) {
-    let stores = JSON.parse(localStorage.getItem('stores')) || [];
 
-    if (stores.find(s => s.name === storeName)) {
-      alert('Este nombre de tienda ya está en uso.');
-    } else {
-      const newStore = { owner: user.email, name: storeName, products: [] };
-      stores.push(newStore);
-      localStorage.setItem('stores', JSON.stringify(stores));
+import { createModal, createAlert } from './modal.js';  // Usaremos ambos: modal y alert
 
-      document.getElementById('storeLink').textContent = `store.html?store=${storeName}`;
-      const storeSection = document.getElementById('storeSection');
-      storeSection.style.display = 'flex'; // Usamos flex para hacer visible
-      alert('Tienda creada con éxito');
-    }
-  }
+// Seleccionar el contenedor principal donde se generará todo dinámicamente
+const mainContent = document.getElementById('main-content');
+
+// Obtener usuario logueado desde localStorage
+const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+// Verificación de que el usuario está logueado
+if (!loggedInUser) {
+  window.location.href = 'login.html';
 }
 
-function loadUserStore() {
-  const user = JSON.parse(localStorage.getItem('loggedInUser'));
-  const stores = JSON.parse(localStorage.getItem('stores')) || [];
-  const userStore = stores.find(store => store.owner === user.email);
+// Función para generar la sección de información del usuario
+function generateUserInfoSection() {
+  const userSection = document.createElement('section');
+  userSection.classList.add('user-section');
 
-  if (userStore) {
-    document.getElementById('storeLink').textContent = `store.html?store=${userStore.name}`;
-    const storeSection = document.getElementById('storeSection');
-    storeSection.style.display = 'flex'; // Usamos flex para hacer visible
-  }
+  userSection.innerHTML = `
+    <h1>Información del Usuario</h1>
+    <div id="profile-info">
+      <p><strong>Usuario:</strong> ${loggedInUser.username}</p>
+      <p><strong>Email:</strong> ${loggedInUser.email}</p>
+      <img src="${loggedInUser.profileImage || './src/img/profiles/user-solid.svg'}" alt="Perfil" style="width: 100px; height: 100px; border-radius: 50%;">
+    </div>
+    <button id="edit-user-btn" class="btn">Editar Información</button>
+  `;
+
+  mainContent.appendChild(userSection);
+
+  // Botón para editar la información del usuario usando modal
+  document.getElementById('edit-user-btn').addEventListener('click', () => {
+    createModal(`
+      <h2>Editar información del usuario</h2>
+      <form>
+        <label>Nombre:</label>
+        <input type="text" value="${loggedInUser.username}" />
+        <label>Email:</label>
+        <input type="email" value="${loggedInUser.email}" />
+        <button type="submit">Guardar</button>
+      </form>
+    `);
+  });
 }
 
-export function initUser() {
-  const user = JSON.parse(localStorage.getItem('loggedInUser'));
+// Función para generar la sección de servicios
+function generateServicesSection() {
+  const servicesSection = document.createElement('section');
+  servicesSection.classList.add('services-section');
 
-  if (!user) {
-    alert('Por favor, inicia sesión primero.');
-    window.location.href = 'login.html';
-    return;
-  }
+  servicesSection.innerHTML = `
+    <h2>Servicios</h2>
+    <button id="manage-stores-btn" class="btn">Locales</button>
+    <!-- Botones adicionales para envíos y contabilidad en el futuro -->
+  `;
 
-  document.getElementById('username').textContent = user.username;
+  mainContent.appendChild(servicesSection);
 
-  const createStoreBtn = document.getElementById('createStore');
-  if (createStoreBtn) {
-    createStoreBtn.addEventListener('click', createStore);
-  }
-
-  loadUserStore();
-  console.log("Módulo de usuario cargado.");
+  // Mostrar la sección de comercios cuando se hace clic en "Locales"
+  document.getElementById('manage-stores-btn').addEventListener('click', () => {
+    createAlert('Acción en desarrollo: Gestión de locales');
+  });
 }
+
+// Generar todas las secciones dinámicamente
+function generateUserPage() {
+  generateUserInfoSection();
+  generateServicesSection();
+}
+
+// Iniciar la generación del contenido
+generateUserPage();
