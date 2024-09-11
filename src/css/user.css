@@ -1,28 +1,61 @@
 /* Estilos de la página de usuario */
-.user-section, .services-section, .stores-section {
+.user-section {
+  width: 100%;
+  max-height: 200px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  border: 1px solid var(--font-color-light);
+  justify-content: space-between;
+  padding: 10px;
   border-radius: var(--std-borderRadius);
+}
+
+.user-section h1 {
+  width: 100%;
+  text-align: center;
 }
 
 #profile-info {
-  margin-bottom: 30px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-#company-list div {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid var(--font-color-light);
+#profile-info img {
+  width: 100%;
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+/* service section */
+.services-section {
+  width: 100%;
+  padding: 15px;
   border-radius: var(--std-borderRadius);
 }
 
-.btn {
-  padding: 10px 20px;
+.services-section h2 {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
+
+.services-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-services {
+  width: 75px;
+  height: 75px;
   background-color: var(--primary-color);
   color: var(--white-color);
   border: none;
@@ -30,6 +63,14 @@
   border-radius: var(--std-borderRadius);
 }
 
-.btn:hover {
+.btn-services:hover {
   background-color: var(--primary-color-hover);
+}
+
+.service-section {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid var(--font-color-light);
+  border-radius: var(--std-borderRadius);
 }

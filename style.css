@@ -41,7 +41,7 @@
     /* Bordes y sombras */
     --std-borderRadius: 10px;
     --btn-borderRadius: 25px;
-    --std-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --std-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     --hover-box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 
     /* Botones de cantidad */
@@ -89,3 +89,17 @@ section {
     align-items: center;
     justify-content: center;
 }
+
+.btn {
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    cursor: pointer;
+    border-radius: var(--std-borderRadius);
+    transition: all ease 0.5s;
+}
+
+.btn:hover {
+    background-color: var(--primary-color-hover);
+  }

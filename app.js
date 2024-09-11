@@ -1,5 +1,5 @@
 // app.js
-
+import './src/modules/confetti.min.js'
 // Función para cargar el módulo de header
 import { initHeader } from './src/modules/header.js';
 
