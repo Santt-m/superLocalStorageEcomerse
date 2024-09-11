@@ -1,5 +1,6 @@
 @import url('./src/css/header.css');
-
+@import url('./src/css/footer.css');
+@import url('./src/css/modal.css');
 :root {
     /* Paleta de colores */
     --bodybackgroundcolor: #f4f4f4;

@@ -9,6 +9,13 @@ if (!loggedInUser) {
   window.location.href = "login.html";
 }
 
+// Función para obtener la imagen de perfil o aplicar el SVG por defecto
+function getProfileImage(user) {
+  return user.profileImage && user.profileImage.trim() !== ""
+    ? user.profileImage
+    : "./src/img/profiles/user-solid.svg";
+}
+
 // Función para ocultar todas las secciones de servicio
 function hideAllServiceSections() {
   const serviceSections = document.querySelectorAll('.service-section');
@@ -78,14 +85,14 @@ function generateUserInfoSection() {
   const userSection = document.createElement("section");
   userSection.classList.add("user-section");
 
+  const profileImage = getProfileImage(loggedInUser);  // Usar la función para obtener la imagen
+
   userSection.innerHTML = `
     <h1>Información del Usuario</h1>
     <div id="profile-info">
       <p><strong>Usuario:</strong> ${loggedInUser.username}</p>
       <p><strong>Email:</strong> ${loggedInUser.email}</p>
-      <img src="${
-        loggedInUser.profileImage || "./src/img/profiles/user-solid.svg"
-      }" alt="Perfil" style="width: 100px; height: 100px; border-radius: 50%;">
+      <img src="${profileImage}" alt="Perfil" style="width: 100px; height: 100px; border-radius: 50%;">
     </div>
     <button id="edit-user-btn" class="btn">Editar Información</button>
   `;
