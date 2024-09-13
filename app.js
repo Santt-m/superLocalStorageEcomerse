@@ -1,4 +1,5 @@
 // app.js
+
 import { initHeader } from './src/modules/header.js';
 import { initFooter } from './src/modules/footer.js';
 import './src/modules/modal.js';
@@ -17,9 +18,17 @@ function loadModules() {
       console.error('Error cargando login.js:', err);
     });
   } else if (path.includes('register.html')) {
-    import('./src/modules/register.js').then(module => module.initRegister());
+    import('./src/modules/register.js').then(() => {
+      console.log('register.js cargado correctamente.');
+    }).catch(err => {
+      console.error('Error cargando register.js:', err);
+    });
   } else if (path.includes('user.html')) {
-    import('./src/modules/user.js');
+    import('./src/modules/user.js').then(() => {
+      console.log('user.js cargado correctamente.');
+    }).catch(err => {
+      console.error('Error cargando user.js:', err);
+    });
   }
 }
 
