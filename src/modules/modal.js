@@ -1,5 +1,11 @@
 /* ejemplos de uso:
 
+** como crear un modal:
+
+createModal('html a mostrar en el modal','titulo del modal', [{text: 'boton ejemplo', action: () => });
+
+** como crear un alert:
+
 // Alert de éxito (verde)
 createAlert('¡Acción completada con éxito!', 3000, 'success');
 

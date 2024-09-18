@@ -1,4 +1,4 @@
-import { createModal, createAlert } from './modal.js';
+import { createModal, createAlert } from '../modal.js';
 
 export function renderSection(mainContent) {
   const localesSection = document.createElement('section');
@@ -10,7 +10,8 @@ export function renderSection(mainContent) {
     <button id="add-local-btn" class="btn">Agregar Local</button>
     <div id="local-list"></div>
   `;
-  
+
+  // Agregar la sección al contenedor principal
   mainContent.appendChild(localesSection);
 
   // Event listener para abrir el modal de agregar nuevo local
@@ -46,27 +47,32 @@ export function renderSection(mainContent) {
     });
   });
 
-  renderUserLocales();  // Renderizar los locales existentes del usuario
+  // Renderizar los locales existentes del usuario
+  renderUserLocales();
 }
 
 // Función para añadir el nuevo local al usuario logueado
 function addLocalToUser(local) {
-  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-  
-  if (loggedInUser) {
-    if (!loggedInUser.empresas) {
-      loggedInUser.empresas = [];  // Si no tiene empresas, crear el array
-    }
-    loggedInUser.empresas.push(local);  // Añadir la nueva empresa
-    localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));  // Guardar los cambios en localStorage
-    
-    // Actualizar también la lista de usuarios en localStorage
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const updatedUsers = users.map(user => user.email === loggedInUser.email ? loggedInUser : user);
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
+  try {
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
-    renderUserLocales();  // Volver a renderizar la lista de locales
-    createAlert('Local agregado con éxito', 3000, 'success');
+    if (loggedInUser) {
+      if (!loggedInUser.empresas) {
+        loggedInUser.empresas = [];  // Si no tiene empresas, crear el array
+      }
+      loggedInUser.empresas.push(local);  // Añadir la nueva empresa
+      localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));  // Guardar los cambios en localStorage
+
+      // Actualizar también la lista de usuarios en localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const updatedUsers = users.map(user => user.email === loggedInUser.email ? loggedInUser : user);
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+
+      renderUserLocales();  // Volver a renderizar la lista de locales
+      createAlert('Local agregado con éxito', 3000, 'success');
+    }
+  } catch (error) {
+    createAlert(`Error al agregar el local: ${error.message}`, 3000, 'error');
   }
 }
 
@@ -88,7 +94,8 @@ function renderUserLocales() {
         <button class="btn-edit" data-id="${local.id}">Editar</button>
         <button class="btn-delete" data-id="${local.id}">Eliminar</button>
       `;
-      
+
+      // Limpiar cualquier listener existente y añadir nuevos
       localElement.querySelector('.btn-edit').addEventListener('click', () => editLocal(local.id));
       localElement.querySelector('.btn-delete').addEventListener('click', () => deleteLocal(local.id));
       
@@ -142,17 +149,21 @@ function editLocal(localId) {
 
 // Función para eliminar un local
 function deleteLocal(localId) {
-  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+  try {
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
   
-  // Filtrar los locales del usuario, quitando el que se va a eliminar
-  loggedInUser.empresas = loggedInUser.empresas.filter(local => local.id !== localId);
+    // Filtrar los locales del usuario, quitando el que se va a eliminar
+    loggedInUser.empresas = loggedInUser.empresas.filter(local => local.id !== localId);
   
-  // Guardar los cambios en localStorage
-  localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
-  const users = JSON.parse(localStorage.getItem('users')) || [];
-  const updatedUsers = users.map(user => user.email === loggedInUser.email ? loggedInUser : user);
-  localStorage.setItem('users', JSON.stringify(updatedUsers));
+    // Guardar los cambios en localStorage
+    localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const updatedUsers = users.map(user => user.email === loggedInUser.email ? loggedInUser : user);
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
 
-  renderUserLocales();  // Volver a renderizar la lista de locales
-  createAlert('Local eliminado con éxito', 3000, 'error');
+    renderUserLocales();  // Volver a renderizar la lista de locales
+    createAlert('Local eliminado con éxito', 3000, 'error');
+  } catch (error) {
+    createAlert(`Error al eliminar el local: ${error.message}`, 3000, 'error');
+  }
 }

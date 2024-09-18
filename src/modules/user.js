@@ -1,4 +1,4 @@
-import { createAlert } from "./modal.js"; // Asegúrate de que esta importación esté funcionando
+import { createAlert, createModal } from "./modal.js";
 
 const mainContent = document.getElementById("main-content");
 const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
@@ -16,134 +16,105 @@ if (!loggedInUser) {
   createAlert(`Bienvenido, ${loggedInUser.username}`, 3000, "success");
 }
 
-// Función para ocultar todas las secciones antes de mostrar una nueva
+// Función para ocultar todas las secciones de servicios
 function hideAllServiceSections() {
-    const sections = document.querySelectorAll('.services-section, .user-section');
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
+  const serviceSections = document.querySelectorAll('.service-section');
+  serviceSections.forEach(section => {
+    section.style.display = 'none';
+  });
 }
 
-// Función para manejar la carga de módulos y capturar errores
-function loadModule(serviceName, loadFunction) {
-  try {
-    createAlert(`Cargando servicio: ${serviceName}`, 3000, "default");
-    loadFunction();  // Llamamos a la función para cargar el servicio
-  } catch (error) {
-    createAlert(
-      `Error al cargar el servicio ${serviceName}: ${error.message}`,
-      3000,
-      "error"
-    );
-    console.error(`Error al cargar ${serviceName}:`, error);
+// Función para cargar dinámicamente los scripts de los servicios
+function loadServiceScript(serviceName, section) {
+  switch (serviceName) {
+    case 'locales':
+      import('./services/locales.js')  // Ruta correcta
+        .then(module => module.renderSection(section))
+        .catch(error => {
+          createAlert(`Error al cargar el script de Locales: ${error.message}`, 3000, "error");
+        });
+      break;
+    case 'envios':
+      import('./services/envios.js')  // Ruta correcta
+        .then(module => module.renderSection(section))
+        .catch(error => {
+          createAlert(`Error al cargar el script de Envíos: ${error.message}`, 3000, "error");
+        });
+      break;
+    case 'stock':
+      import('./services/stock.js')  // Ruta correcta
+        .then(module => module.renderSection(section))
+        .catch(error => {
+          createAlert(`Error al cargar el script de Stock: ${error.message}`, 3000, "error");
+        });
+      break;
+    case 'contabilidad':
+      import('./services/contabilidad.js')  // Ruta correcta
+        .then(module => module.renderSection(section))
+        .catch(error => {
+          createAlert(`Error al cargar el script de Contabilidad: ${error.message}`, 3000, "error");
+        });
+      break;
+    case 'pedidos':
+      import('./services/pedidos.js')  // Ruta correcta
+        .then(module => module.renderSection(section))
+        .catch(error => {
+          createAlert(`Error al cargar el script de Pedidos: ${error.message}`, 3000, "error");
+        });
+      break;
+    default:
+      createAlert("Servicio no encontrado", 3000, "error");
   }
 }
 
-function loadLocales() {
-  import("./locales.js")
-    .then((module) => {
-      module.renderSection(mainContent);  // Asegúrate de que locales.js tenga esta función
-      mainContent.style.display = 'block';  // Mostrar la sección después de cargar
-    })
-    .catch((error) => {
-      createAlert(`Error al cargar locales: ${error.message}`, 3000, "error");
-      console.error("Error en locales.js:", error);
-    });
-}
-
-function loadPedidos() {
-  import("./pedidos.js")
-    .then((module) => {
-      module.renderSection(mainContent);
-      mainContent.style.display = 'block';
-    })
-    .catch((error) => {
-      createAlert(`Error al cargar pedidos: ${error.message}`, 3000, "error");
-      console.error("Error en pedidos.js:", error);
-    });
-}
-
-function loadEnvios() {
-  import("./envios.js")
-    .then((module) => {
-      module.renderSection(mainContent);
-      mainContent.style.display = 'block';
-    })
-    .catch((error) => {
-      createAlert(`Error al cargar envíos: ${error.message}`, 3000, "error");
-      console.error("Error en envíos.js:", error);
-    });
-}
-
-function loadStock() {
-  import("./stock.js")
-    .then((module) => {
-      module.renderSection(mainContent);
-      mainContent.style.display = 'block';
-    })
-    .catch((error) => {
-      createAlert(`Error al cargar stock: ${error.message}`, 3000, "error");
-      console.error("Error en stock.js:", error);
-    });
-}
-
-function loadContabilidad() {
-  import("./contabilidad.js")
-    .then((module) => {
-      module.renderSection(mainContent);
-      mainContent.style.display = 'block';
-    })
-    .catch((error) => {
-      createAlert(`Error al cargar contabilidad: ${error.message}`, 3000, "error");
-      console.error("Error en contabilidad.js:", error);
-    });
-}
-
-// Función para generar los botones de servicio y cargar el script correspondiente
-function generateServiceButton(serviceName, loadServiceFunction) {
+// Función para generar los botones de servicios
+function generateServiceButton(serviceName, serviceId) {
   const button = document.createElement('button');
-  button.classList.add('btn-services');
   button.textContent = serviceName;
+  button.classList.add('btn', 'service-btn');
 
   button.addEventListener('click', () => {
+    let serviceSection = document.getElementById(serviceId);
+
+    // Si la sección no existe, la creamos
+    if (!serviceSection) {
+      serviceSection = document.createElement('section');
+      serviceSection.id = serviceId;
+      serviceSection.classList.add('service-section');
+      mainContent.appendChild(serviceSection);
+
+      // Cargar dinámicamente el script correspondiente
+      loadServiceScript(serviceName, serviceSection);
+    }
+
+    // Ocultamos todas las demás secciones de servicio
     hideAllServiceSections();
-    loadModule(serviceName, loadServiceFunction);  // Llamada a la función con manejo de errores
+
+    // Mostramos la sección actual
+    serviceSection.style.display = 'flex';
   });
 
   return button;
 }
 
-// Función para generar la sección de servicios y agregar los botones
+// Función para generar la sección de servicios
 function generateServicesSection() {
   const servicesSection = document.createElement("section");
   servicesSection.classList.add("services-section");
+  servicesSection.innerHTML = `
+    <h3>Servicios</h3>
+    <div id="services-list"></div>
+  `;
 
-  servicesSection.innerHTML = `<h2>Servicios</h2>`;
+  const servicesList = servicesSection.querySelector('#services-list');
 
-  const serviceButtonsContainer = document.createElement("div");
-  serviceButtonsContainer.classList.add("services-buttons-container");
+  // Crear los botones de servicios y agregar las secciones correspondientes
+  servicesList.appendChild(generateServiceButton("Locales", "locales-section"));
+  servicesList.appendChild(generateServiceButton("Envíos", "envios-section"));
+  servicesList.appendChild(generateServiceButton("Stock", "stock-section"));
+  servicesList.appendChild(generateServiceButton("Contabilidad", "contabilidad-section"));
+  servicesList.appendChild(generateServiceButton("Pedidos", "pedidos-section"));
 
-  // Crear botones de servicio, asignando el nombre del servicio, id de la sección y el nombre del script
-  serviceButtonsContainer.appendChild(
-    generateServiceButton("Locales", loadLocales)
-  );
-  serviceButtonsContainer.appendChild(
-    generateServiceButton("Pedidos", loadPedidos)
-  );
-  serviceButtonsContainer.appendChild(
-    generateServiceButton("Envíos", loadEnvios)
-  );
-  serviceButtonsContainer.appendChild(
-    generateServiceButton("Stock", loadStock)
-  );
-  serviceButtonsContainer.appendChild(
-    generateServiceButton(
-      "Contabilidad",
-      loadContabilidad
-    )
-  );
-
-  servicesSection.appendChild(serviceButtonsContainer);
   mainContent.appendChild(servicesSection);
 }
 
@@ -152,14 +123,15 @@ function generateUserInfoSection() {
   const userSection = document.createElement("section");
   userSection.classList.add("user-section");
 
-  const profileImage = loggedInUser.profileImage || './src/img/profiles/user-solid.svg'; // Usar imagen predeterminada si no existe
+  const profileImage =
+    loggedInUser.profileImage || "./src/img/profiles/user-solid.svg"; // Usar imagen predeterminada si no existe
 
   userSection.innerHTML = `
     <h1>Información del Usuario</h1>
     <div id="profile-info">
       <p><strong>Usuario:</strong> ${loggedInUser.username}</p>
       <p><strong>Email:</strong> ${loggedInUser.email}</p>
-      <img src="${profileImage}" alt="Perfil" style="width: 100px; height: 100px; border-radius: 50%;">
+      <img src="${profileImage}" alt="Perfil">
     </div>
     <button id="edit-user-btn" class="btn">Editar Información</button>
   `;
@@ -167,8 +139,8 @@ function generateUserInfoSection() {
   mainContent.appendChild(userSection);
 
   document.getElementById("edit-user-btn").addEventListener("click", () => {
-    createModal(`
-      <h2>Editar información del usuario</h2>
+    createModal(
+      `
       <form>
         <label>Nombre:</label>
         <input type="text" value="${loggedInUser.username}" />
@@ -176,7 +148,9 @@ function generateUserInfoSection() {
         <input type="email" value="${loggedInUser.email}" />
         <button type="submit">Guardar</button>
       </form>
-    `);
+    `,
+      "Editar información del usuario"
+    );
   });
 }
 
