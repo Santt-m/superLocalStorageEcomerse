@@ -1,4 +1,6 @@
-/* Modal Overlay */
+/* Estilos para el Modal */
+
+/* Overlay del modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -10,23 +12,42 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards; /* Animación de entrada */
 }
 
-/* Modal Content */
+/* Contenido del modal */
 .modal-content {
-  background-color: white;
-  padding: 20px;
+  background-color: #fff;
+  padding: 25px;
   border-radius: 10px;
   max-width: 600px;
   width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  opacity: 0;
+  transform: translateY(50px);
+  animation: slideUpModal 0.3s forwards; /* Animación de deslizamiento */
 }
 
-/* Modal Header */
+/* Animación de entrada del modal */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpModal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Encabezado del modal */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -37,32 +58,31 @@
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.5em;
+  font-size: 1.75em;
   font-weight: bold;
   color: #333;
 }
 
-/* Close Button (X) */
 .modal-close-icon {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 24px;
   color: #888;
-  transition: color 0.3s;
+  transition: color 0.3s ease;
 }
 
 .modal-close-icon:hover {
-  color: #333;
+  color: #000;
 }
 
-/* Modal Body */
+/* Cuerpo del modal */
 .modal-body {
-  padding: 10px 0;
-  font-size: 1.1em;
+  padding: 15px 0;
+  font-size: 1.15em;
   color: #444;
   line-height: 1.5;
 }
 
-/* Modal Footer (for buttons) */
+/* Pie del modal (botones) */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -72,18 +92,21 @@
 }
 
 .modal-footer button {
-  background-color: var(--primary-color);
+  background-color: #007BFF;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
 }
 
 .modal-footer button:hover {
-  background-color: var(--primary-color-hover);
+  background-color: #0056b3;
 }
+
+/* Estilos para las Alertas */
 
 /* Contenedor de alertas */
 .alert-container {
@@ -96,49 +119,64 @@
   z-index: 1100;
 }
 
-/* Alert por defecto (negro) */
+/* Alert por defecto */
 .alert-overlay {
-  background-color: rgba(0, 0, 0, 0.7);  /* Default negro */
+  background-color: rgba(0, 0, 0, 0.7);
   padding: 15px;
   color: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.3s ease-out, fadeOut 3s forwards;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  animation: slideUpAlert 0.3s ease-out, fadeOut 5s forwards;
 }
 
-/* Alert de éxito (verde) */
+/* Tipos de alertas */
 .alert-success {
-  background-color: rgba(0, 255, 0, 0.7);  /* Verde */
-  color: white;
+  background-color: rgba(40, 167, 69, 0.9); /* Verde éxito */
 }
 
-/* Alert de error (rojo) */
 .alert-error {
-  background-color: rgba(255, 0, 0, 0.7);  /* Rojo */
-  color: white;
+  background-color: rgba(220, 53, 69, 0.9); /* Rojo error */
 }
 
-/* Alert de advertencia (amarillo) */
 .alert-warning {
-  background-color: rgba(255, 255, 0, 0.7);  /* Amarillo */
+  background-color: rgba(255, 193, 7, 0.9); /* Amarillo advertencia */
   color: black;
 }
 
-/* Animación para deslizar las alertas hacia arriba */
-@keyframes slideUp {
+/* Animaciones de las alertas */
+@keyframes slideUpAlert {
   from {
-      transform: translateY(100%);
-      opacity: 0;
+    transform: translateY(100%);
+    opacity: 0;
   }
   to {
-      transform: translateY(0);
-      opacity: 1;
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
-/* Animación para desvanecer las alertas */
 @keyframes fadeOut {
   0% { opacity: 1; }
   90% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* Botón para cerrar la alerta */
+.alert-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.alert-close-btn:hover {
+  color: #ccc;
 }

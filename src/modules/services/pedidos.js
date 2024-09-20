@@ -1,11 +1,9 @@
-export function renderSection(mainContent) {
-    const pedidosSection = document.createElement('section');
-    pedidosSection.id = 'pedidos-section';
-    pedidosSection.classList.add('service-section');
-    pedidosSection.innerHTML = `
-      <h3>Pedidos</h3>
-      <p>Aquí se gestionan los pedidos.</p>
+// src/services/pedidos.js
+
+export function renderSection(section) {
+    section.innerHTML = `
+      <h2>Pedidos</h2>
+      <p>Bienvenido al panel de control de Pedidos.</p>
+      <!-- Aquí puedes añadir más contenido o funcionalidades específicas para Pedidos -->
     `;
-    mainContent.appendChild(pedidosSection);
   }
-  

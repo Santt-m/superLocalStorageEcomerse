@@ -9,11 +9,13 @@
   justify-content: space-between;
   padding: 10px;
   border-radius: var(--std-borderRadius);
+  background-color: var(--background-color); /* Color de fondo opcional */
 }
 
 .user-section h1 {
   width: 100%;
   text-align: center;
+  margin-bottom: 10px;
 }
 
 #profile-info {
@@ -34,43 +36,106 @@
   margin-bottom: 10px;
 }
 
-/* service section */
+/* Estilos para la sección de servicios */
 .services-section {
   width: 100%;
   padding: 15px;
   border-radius: var(--std-borderRadius);
+  background-color: var(--background-color); /* Color de fondo opcional */
 }
 
-.services-section h2 {
+.services-section h3 {
   width: 100%;
   text-align: center;
-  padding: 10px;
+  margin-bottom: 10px;
 }
-
+#services-list{
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto
+}
 .services-buttons-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
 }
 
 .btn-services {
-  width: 75px;
-  height: 75px;
+  width: 100px; /* Tamaño más grande para mejor visibilidad */
+  height: 100px;
   background-color: var(--primary-color);
   color: var(--white-color);
   border: none;
   cursor: pointer;
   border-radius: var(--std-borderRadius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px; /* Ajusta el tamaño del texto */
+  text-align: center;
 }
 
 .btn-services:hover {
   background-color: var(--primary-color-hover);
 }
 
+/* Estilos para las secciones de servicio */
+#service-content{
+  width: 100%;
+}
 .service-section {
   width: 100%;
-  padding: 10px;
+  padding: 20px;
   margin-top: 10px;
   border: 1px solid var(--font-color-light);
   border-radius: var(--std-borderRadius);
+  display: none; /* Por defecto, todas las secciones de servicio están ocultas */
+}
+
+.service-section.active {
+  display: flex; /* Solo se mostrará la sección activa */
+}
+
+/* Listado de empresas */
+#company-list {
+  margin-top: 20px;
+}
+
+.company-item {
+  padding: 10px;
+  border: 1px solid var(--font-color-light);
+  border-radius: var(--std-borderRadius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#company-details {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--font-color-light);
+  border-radius: var(--std-borderRadius);
+}
+
+button#add-product-btn {
+  margin-top: 10px;
+}
+
+button#edit-company-btn,
+button#delete-company-btn {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+button#delete-company-btn {
+  background-color: var(--danger-color);
+}
+
+button#delete-company-btn:hover {
+  background-color: var(--danger-color-hover);
 }

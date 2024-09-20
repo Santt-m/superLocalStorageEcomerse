@@ -19,6 +19,14 @@ Este es un proyecto de e-commerce donde los usuarios pueden registrarse, iniciar
 - Pueden crear múltiples **empresas** y gestionarlas.
 - Cada empresa tiene sus propios datos, incluyendo el **nombre**, **dirección**, **redes sociales**, **horarios** y **productos**.
 
+### Sección de Servicios
+- Los usuarios pueden acceder a diferentes servicios desde la sección de servicios en su página de perfil.
+- Secciones disponibles incluyen:
+  - **Ecommerce Manager**: Panel para gestionar empresas.
+  - **Pedidos**: Gestión y visualización de pedidos.
+  - **Contabilidad**: Gestión de aspectos contables.
+  - **Dashboard**: Información y estadísticas del perfil del usuario.
+
 ### Gestión de Empresas
 - Los usuarios pueden crear y gestionar varias empresas.
 - Los datos de la empresa incluyen:

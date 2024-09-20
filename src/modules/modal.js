@@ -1,109 +1,92 @@
-/* ejemplos de uso:
-
-** como crear un modal:
-
-createModal('html a mostrar en el modal','titulo del modal', [{text: 'boton ejemplo', action: () => });
-
-** como crear un alert:
-
-// Alert de éxito (verde)
-createAlert('¡Acción completada con éxito!', 3000, 'success');
-
-// Alert de error (rojo)
-createAlert('Ha ocurrido un error', 3000, 'error');
-
-// Alert de advertencia (amarillo)
-createAlert('Atención: Hay un problema', 3000, 'warning');
-
-// Alert por defecto (negro)
-createAlert('Este es un mensaje por defecto', 3000);
-
-*/
-
-
-// Crear el contenedor de alertas si no existe
-function createAlertContainer() {
-  let alertContainer = document.querySelector('.alert-container');
-  if (!alertContainer) {
-      alertContainer = document.createElement('div');
-      alertContainer.classList.add('alert-container');
-      document.body.appendChild(alertContainer);
+class Modal {
+  constructor(options) {
+    this.options = options;
+    this.alertContainer = document.querySelector('.alert-container') || this.createAlertContainer();
   }
-  return alertContainer;
-}
 
-export function createModal(content, title = '', footerButtons = []) {
-  const modalOverlay = document.createElement('div');
-  modalOverlay.classList.add('modal-overlay');
+  createModal() {
+    // Crear el overlay del modal
+    const overlay = document.createElement('div');
+    overlay.classList.add('modal-overlay');
 
-  const modalContent = document.createElement('div');
-  modalContent.classList.add('modal-content');
+    // Crear el contenido del modal
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
 
-  // Crear la cabecera del modal con el título y la "X" para cerrar
-  const modalHeader = document.createElement('div');
-  modalHeader.classList.add('modal-header');
+    modalContent.innerHTML = `
+      <div class="modal-header">
+        <h2>${this.options.title}</h2>
+        <span class="modal-close-icon">&times;</span>
+      </div>
+      <div class="modal-body">
+        ${this.options.content}
+      </div>
+      <div class="modal-footer">
+        <button class="modal-close-btn">${this.options.buttonText}</button>
+      </div>
+    `;
 
-  const modalTitle = document.createElement('h2');
-  modalTitle.textContent = title;
-  modalHeader.appendChild(modalTitle);
+    // Añadir el contenido del modal al overlay
+    overlay.appendChild(modalContent);
+    document.body.appendChild(overlay);
 
-  const closeIcon = document.createElement('span');
-  closeIcon.textContent = '✖';
-  closeIcon.classList.add('modal-close-icon');
-  closeIcon.addEventListener('click', () => {
-      document.body.removeChild(modalOverlay);
-  });
+    // Cerrar el modal al hacer clic en los botones de cierre
+    overlay.querySelector('.modal-close-icon').addEventListener('click', () => {
+      this.closeModal(overlay);
+    });
+    overlay.querySelector('.modal-close-btn').addEventListener('click', () => {
+      this.closeModal(overlay);
+    });
+  }
 
-  modalHeader.appendChild(closeIcon);
-  modalContent.appendChild(modalHeader);
+  closeModal(overlay) {
+    // Remover el modal del DOM
+    document.body.removeChild(overlay);
+  }
 
-  // Añadir el contenido del modal
-  const modalBody = document.createElement('div');
-  modalBody.classList.add('modal-body');
-  modalBody.innerHTML = content;
-  modalContent.appendChild(modalBody);
+  createAlertContainer() {
+    const container = document.createElement('div');
+    container.classList.add('alert-container');
+    document.body.appendChild(container);
+    return container;
+  }
 
-  // Crear pie de página para los botones del modal
-  if (footerButtons.length > 0) {
-    const modalFooter = document.createElement('div');
-    modalFooter.classList.add('modal-footer');
+  createAlert() {
+    // Crear la alerta
+    const alert = document.createElement('div');
+    alert.classList.add('alert-overlay');
+    
+    // Aplicar el tipo de alerta según la opción
+    if (this.options.type) {
+      alert.classList.add(`alert-${this.options.type}`);
+    }
 
-    footerButtons.forEach(button => {
-      const modalButton = document.createElement('button');
-      modalButton.textContent = button.text;
-      modalButton.classList.add(button.class || 'btn');
-      modalButton.addEventListener('click', button.onClick || (() => {}));
-      modalFooter.appendChild(modalButton);
+    // Definir el contenido de la alerta
+    alert.innerHTML = `
+      <p>${this.options.message}</p>
+      <button class="alert-close-btn">${this.options.buttonText}</button>
+    `;
+
+    // Añadir la alerta al contenedor de alertas
+    this.alertContainer.appendChild(alert);
+
+    // Cerrar la alerta al hacer clic en el botón
+    alert.querySelector('.alert-close-btn').addEventListener('click', () => {
+      this.closeAlert(alert);
     });
 
-    modalContent.appendChild(modalFooter);
+    // Desaparecer automáticamente después de 5 segundos
+    setTimeout(() => {
+      this.closeAlert(alert);
+    }, 5000);
   }
 
-  modalOverlay.appendChild(modalContent);
-  document.body.appendChild(modalOverlay);
+  closeAlert(alert) {
+    // Remover la alerta del DOM
+    if (alert && alert.parentNode) {
+      alert.parentNode.removeChild(alert);
+    }
+  }
 }
 
-// Función para crear un alert que se cierre automáticamente
-export function createAlert(content, timeout = 3000, type = 'default') {
-  const alertContainer = createAlertContainer();  // Usar el contenedor de alertas
-  
-  const alertOverlay = document.createElement('div');
-  alertOverlay.classList.add('alert-overlay', `alert-${type}`);  // Agregar clase según el tipo
-  
-  const alertContent = document.createElement('div');
-  alertContent.classList.add('alert-content');
-  alertContent.innerHTML = content;
-  
-  alertOverlay.appendChild(alertContent);
-  alertContainer.appendChild(alertOverlay);
-  
-  // Cerrar automáticamente después del tiempo especificado
-  setTimeout(() => {
-      if (alertOverlay) {
-          alertOverlay.style.opacity = 0;
-          setTimeout(() => {
-              alertContainer.removeChild(alertOverlay);
-          }, 1000);
-      }
-  }, timeout);
-}
+export default Modal;
