@@ -1,60 +1,52 @@
 import Modal from "../modal.js";
 
-// Función para renderizar la sección de empresas
+// Función para renderizar la sección de e-commerce
 export function renderSection(section) {
-  renderCompaniesSection(section);
+  renderEcommerceSection(section);
 }
 
-// Función para renderizar la lista de empresas del usuario
-export function renderCompaniesSection(section) {
+// Función para renderizar la lista de e-commerce del usuario
+export function renderEcommerceSection(section) {
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
-  if (!loggedInUser.empresas) {
-    const modal = new Modal({
-      title: "Advertencia",
-      message: "No tienes empresas registradas en tu cuenta.",
-      buttonText: "Crear Array de Empresas",
-      onClose: () => {
-        loggedInUser.empresas = [];
-        localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-        renderCompaniesSection(section);
-      }
+  // Verificar si el usuario tiene e-commerce
+  if (!loggedInUser.ecommerce) {
+    loggedInUser.ecommerce = [];
+    localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+    const alert = new Modal({
+      title: "Información",
+      message: "Se ha creado automáticamente un array para tus e-commerce.",
+      buttonText: "Aceptar"
     });
-    modal.createAlert();
-    return;
+    alert.createAlert();
   }
 
   section.innerHTML = `
-    <h2>Empresas</h2>
-    <div id="company-list" role="region" aria-label="Lista de empresas">
-      ${loggedInUser.empresas.length === 0
-        ? `<p>No tienes empresas registradas.</p>`
-        : loggedInUser.empresas.map((empresa, index) => `
-            <div class="company-card" tabindex="0" role="article" aria-labelledby="empresa-${index}-nombre">
-              <h3 id="empresa-${index}-nombre">${empresa.nombreEmpresa}</h3>
-              <p><strong>Descripción:</strong> ${empresa.descripcion}</p>
-              <p><strong>Dirección:</strong> ${empresa.direccion}</p>
-              <p><strong>Teléfono:</strong> ${empresa.telefono}</p>
-              <p><strong>WhatsApp:</strong> ${empresa.whatsapp}</p>
-              <img src="${empresa.logo}" alt="Logo de ${empresa.nombreEmpresa}" class="company-logo"/>
-              <div class="company-actions">
-                <button class="btn btn-view-company" data-index="${index}" aria-label="Ver detalles de ${empresa.nombreEmpresa}">Ver</button>
-                <button class="btn btn-view-products" data-index="${index}" aria-label="Ver productos de ${empresa.nombreEmpresa}">Productos</button>
+    <h2>Mis E-commerce</h2>
+    <div id="ecommerce-list" role="region" aria-label="Lista de e-commerce">
+      ${loggedInUser.ecommerce.length === 0
+        ? `<p>No tienes e-commerce registrados.</p>`
+        : loggedInUser.ecommerce.map((ecommerce, index) => `
+            <div class="ecommerce-card" tabindex="0" role="article" aria-labelledby="ecommerce-${index}-nombre">
+              <h3 id="ecommerce-${index}-nombre">${ecommerce.nombre}</h3>
+              <p><strong>Descripción:</strong> ${ecommerce.descripcion}</p>
+              <p><strong>URL:</strong> <a href="${ecommerce.url}" target="_blank">${ecommerce.url}</a></p>
+              <div class="ecommerce-actions">
+                <button class="btn btn-view-ecommerce" data-index="${index}" aria-label="Ver detalles de ${ecommerce.nombre}">Ver</button>
+                <button class="btn btn-view-products" data-index="${index}" aria-label="Ver productos de ${ecommerce.nombre}">Productos</button>
               </div>
             </div>
           `).join('')}
     </div>
-    <button id="create-company-btn" class="btn btn-create" aria-label="Crear nueva empresa">Crear Nueva Empresa</button>
+    <button id="create-ecommerce-btn" class="btn btn-create" aria-label="Crear nuevo e-commerce">Crear Nuevo E-commerce</button>
   `;
 
-  // Evento para crear una nueva empresa
-  document.getElementById("create-company-btn").addEventListener("click", openCreateCompanyModal);
+  document.getElementById("create-ecommerce-btn").addEventListener("click", openCreateEcommerceModal);
 
-  // Eventos para los botones de "Ver" y "Productos" en cada card de empresa
-  document.querySelectorAll(".btn-view-company").forEach(button => {
+  document.querySelectorAll(".btn-view-ecommerce").forEach(button => {
     button.addEventListener("click", (e) => {
       const index = e.target.getAttribute("data-index");
-      openEditCompanyModal(section, index);
+      openEditEcommerceModal(section, index);
     });
   });
 
@@ -66,418 +58,219 @@ export function renderCompaniesSection(section) {
   });
 }
 
-// Función para abrir el modal de creación de empresas
-function openCreateCompanyModal() {
+// Función para abrir el modal de creación de e-commerce
+function openCreateEcommerceModal() {
   const modal = new Modal({
-    title: "Crear Nueva Empresa",
-    content: `
-      <form id="create-company-form">
-        <label for="nombreEmpresa">Nombre de la Empresa:</label>
-        <input type="text" id="nombreEmpresa" required />
-        
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" required></textarea>
-
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" required />
-        
-        <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" required />
-
-        <label for="whatsapp">WhatsApp:</label>
-        <input type="text" id="whatsapp" required />
-
-        <label for="logo">Logo de la Empresa (URL):</label>
-        <input type="text" id="logo" required />
-        
-        <label for="imagenFondo">Imagen de Fondo (URL):</label>
-        <input type="text" id="imagenFondo" required />
-
-        <div id="social-media-section">
-          <label>Redes Sociales:</label>
-          <button type="button" id="add-social-media-btn">Agregar Red Social</button>
-          <div id="social-media-list"></div>
-        </div>
-        
-        <button type="submit">Crear Empresa</button>
-      </form>
-    `,
-    buttonText: "Cerrar"
-  });
-
-  modal.createModal();
-  addSocialMediaHandler();
-
-  document.getElementById("create-company-form").addEventListener("submit", addCompany);
-}
-
-// Función para abrir el modal de editar empresa
-function openEditCompanyModal(section, companyIndex) {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  const empresa = loggedInUser.empresas[companyIndex];
-
-  const modal = new Modal({
-    title: `Editar Empresa: ${empresa.nombreEmpresa}`,
-    content: `
-      <form id="edit-company-form">
-        <label for="nombreEmpresa">Nombre de la Empresa:</label>
-        <input type="text" id="nombreEmpresa" value="${empresa.nombreEmpresa}" required />
-        
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion">${empresa.descripcion}</textarea>
-
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" value="${empresa.direccion}" required />
-        
-        <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" value="${empresa.telefono}" required />
-
-        <label for="whatsapp">WhatsApp:</label>
-        <input type="text" id="whatsapp" value="${empresa.whatsapp}" required />
-
-        <label for="logo">Logo de la Empresa (URL):</label>
-        <input type="text" id="logo" value="${empresa.logo}" required />
-        
-        <label for="imagenFondo">Imagen de Fondo (URL):</label>
-        <input type="text" id="imagenFondo" value="${empresa.imagenFondo}" required />
-
-        <button type="submit">Guardar Cambios</button>
-      </form>
-    `,
+    title: "Crear Nuevo E-commerce",
+    content: getStepContent(1),
     buttonText: "Cerrar"
   });
 
   modal.createModal();
 
-  // Añadir el evento al formulario de edición
-  document.getElementById("edit-company-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    saveEditedCompany(section, companyIndex);
-  });
+  document.getElementById("create-ecommerce-form").addEventListener("submit", handleCreateEcommerce);
 }
 
-// Función para guardar los cambios de la empresa
-function saveEditedCompany(section, companyIndex) {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+// Contenido de cada paso del formulario
+function getStepContent(step) {
+  switch(step) {
+    case 1:
+      return `
+        <form id="create-ecommerce-form" data-step="1">
+          <h3>Crear un nuevo e-commerce</h3>
+          <p>Completa la información básica sobre tu e-commerce, incluyendo el nombre y la URL. Asegúrate de que la URL sea única.</p>
+          <label for="nombre">Nombre del E-commerce:</label>
+          <input type="text" id="nombre" required />
+          
+          <label for="url">URL (store.html?tienda=):</label>
+          <input type="text" id="url" required placeholder="Ej: tienda123" />
+          
+          <button type="button" class="fill-data-btn">Llenar Datos de Prueba</button>
+          <button type="submit">Siguiente</button>
+        </form>
+      `;
+    case 2:
+      return `
+        <form id="create-ecommerce-form" data-step="2">
+          <h3>Detalles adicionales</h3>
+          <p>Proporciona una breve descripción, dirección y tus datos de contacto.</p>
+          <label for="descripcion">Descripción:</label>
+          <textarea id="descripcion" required></textarea>
 
-  // Actualizamos la empresa con los nuevos valores
-  loggedInUser.empresas[companyIndex] = {
-    ...loggedInUser.empresas[companyIndex],
-    nombreEmpresa: document.getElementById("nombreEmpresa").value,
-    descripcion: document.getElementById("descripcion").value,
-    direccion: document.getElementById("direccion").value,
-    telefono: document.getElementById("telefono").value,
-    whatsapp: document.getElementById("whatsapp").value,
-    logo: document.getElementById("logo").value,
-    imagenFondo: document.getElementById("imagenFondo").value
-  };
+          <label for="direccion">Dirección:</label>
+          <input type="text" id="direccion" required />
 
-  // Guardamos los cambios en localStorage
-  localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+          <label for="telefono">Teléfono:</label>
+          <input type="text" id="telefono" required />
 
-  // Mostramos alerta de éxito
-  const alert = new Modal({
-    message: `Empresa ${loggedInUser.empresas[companyIndex].nombreEmpresa} editada exitosamente.`,
-    buttonText: "Aceptar",
-    type: "success"
-  });
-  alert.createAlert();
+          <label for="whatsapp">WhatsApp:</label>
+          <input type="text" id="whatsapp" required />
 
-  // Volvemos a renderizar la lista de empresas
-  renderCompaniesSection(section);
-}
-
-// Función para manejar la creación de la empresa
-function addCompany(e) {
-  e.preventDefault();
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-  const newCompany = {
-    nombreEmpresa: document.getElementById("nombreEmpresa").value,
-    descripcion: document.getElementById("descripcion").value,
-    direccion: document.getElementById("direccion").value,
-    telefono: document.getElementById("telefono").value,
-    whatsapp: document.getElementById("whatsapp").value,
-    logo: document.getElementById("logo").value,
-    imagenFondo: document.getElementById("imagenFondo").value,
-    redesSociales: getSocialMedia(),
-    productos: []
-  };
-
-  loggedInUser.empresas.push(newCompany);
-  localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-
-  const alert = new Modal({
-    message: `Empresa ${newCompany.nombreEmpresa} creada exitosamente.`,
-    buttonText: "Aceptar",
-    type: "success"
-  });
-  alert.createAlert();
-
-  renderCompaniesSection(document.querySelector("section"));
-}
-
-// Función para obtener las redes sociales agregadas
-function getSocialMedia() {
-  const socialMediaInputs = document.querySelectorAll(".social-media-entry");
-  const socialMediaArray = [];
-
-  socialMediaInputs.forEach(entry => {
-    const name = entry.querySelector(".social-name").value;
-    const url = entry.querySelector(".social-url").value;
-    socialMediaArray.push({ name, url });
-  });
-
-  return socialMediaArray;
-}
-
-// Agregar más redes sociales dinámicamente
-function addSocialMediaHandler() {
-  const addBtn = document.getElementById("add-social-media-btn");
-  addBtn.addEventListener("click", () => {
-    const socialMediaList = document.getElementById("social-media-list");
-    const socialEntry = document.createElement("div");
-    socialEntry.classList.add("social-media-entry");
-    socialEntry.innerHTML = `
-      <input type="text" class="social-name" placeholder="Nombre de la red social" required />
-      <input type="text" class="social-url" placeholder="URL de la red social" required />
-      <button type="button" class="remove-social-media-btn">Eliminar</button>
-    `;
-
-    socialMediaList.appendChild(socialEntry);
-
-    socialEntry.querySelector(".remove-social-media-btn").addEventListener("click", () => {
-      socialEntry.remove();
-    });
-  });
-}
-
-// Función para renderizar la lista de productos
-function renderProductList(section, companyIndex) {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  const company = loggedInUser.empresas[companyIndex];
-
-  const productListHTML = company.productos.length === 0
-    ? `<p>No hay productos registrados.</p>`
-    : company.productos.map((producto, productIndex) => `
-        <div class="product-card">
-          <h4>${producto.name}</h4>
-          <p><strong>Descripción:</strong> ${producto.description}</p>
-          <p><strong>Tipo:</strong> ${producto.type}</p>
-          <p><strong>Tags:</strong> ${producto.tag.join(', ')}</p>
-          <p><strong>Precio:</strong> $${producto.price}</p>
-          <p><strong>Promoción:</strong> ${producto.promo ? 'Sí' : 'No'}</p>
-          <p><strong>Alcohólico:</strong> ${producto.alcoholic ? 'Sí' : 'No'}</p>
-          <img src="${producto.image}" alt="${producto.name}" class="product-image"/>
-          <div class="product-actions">
-            <button class="btn btn-edit-product" data-company-index="${companyIndex}" data-product-index="${productIndex}" aria-label="Editar ${producto.name}">Editar</button>
-            <button class="btn btn-delete-product" data-company-index="${companyIndex}" data-product-index="${productIndex}" aria-label="Eliminar ${producto.name}">Eliminar</button>
+          <button type="button" class="fill-data-btn">Llenar Datos de Prueba</button>
+          <button type="submit">Siguiente</button>
+        </form>
+      `;
+    case 3:
+      return `
+        <form id="create-ecommerce-form" data-step="3">
+          <h3>Conecta tus redes sociales</h3>
+          <p>Añade tus redes sociales para que los clientes puedan seguirte y contactarte fácilmente.</p>
+          <div id="social-media-container">
+            <div>
+              <input type="text" placeholder="Nombre" required />
+              <input type="text" placeholder="URL" required />
+            </div>
           </div>
-        </div>
-      `).join('');
+          <button type="button" id="add-social-media-btn">Agregar Red Social</button>
+          <button type="button" class="fill-data-btn">Llenar Datos de Prueba</button>
+          <button type="submit">Siguiente</button>
+        </form>
+      `;
+    case 4:
+      return `
+        <form id="create-ecommerce-form" data-step="4">
+          <h3>Establece tus horarios</h3>
+          <p>Selecciona los días de operación y establece tus horarios de apertura y cierre.</p>
+          <div id="horarios-container">
+            ${getHorariosHTML()}
+          </div>
+          <button type="button" class="fill-data-btn">Llenar Datos de Prueba</button>
+          <button type="submit">Crear E-commerce</button>
+        </form>
+      `;
+    default:
+      return '';
+  }
+}
 
-  section.innerHTML = `
-    <h2>Productos de la Empresa: ${company.nombreEmpresa}</h2>
-    <div id="product-list">${productListHTML}</div>
-    <button id="add-product-btn" class="btn btn-add" aria-label="Agregar producto a ${company.nombreEmpresa}">Agregar Producto</button>
-    <button id="back-to-companies-btn" class="btn btn-back">Volver a Empresas</button>
+// Generar HTML para los horarios
+function getHorariosHTML() {
+  const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+  
+  return `
+    <table class="horarios-table">
+      <thead>
+        <tr>
+          <th>Día</th>
+          <th>Horario Apertura Local</th>
+          <th>Horario Cierre Local</th>
+          <th>Horario Apertura Envío</th>
+          <th>Horario Cierre Envío</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${dias.map(dia => `
+          <tr>
+            <td>${dia}</td>
+            <td><input type="time" id="apertura-${dia}" required /></td>
+            <td><input type="time" id="cierre-${dia}" required /></td>
+            <td><input type="time" id="envio-apertura-${dia}" required /></td>
+            <td><input type="time" id="envio-cierre-${dia}" required /></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
   `;
+}
 
-  // Evento para volver a la lista de empresas
-  document.getElementById("back-to-companies-btn").addEventListener("click", () => {
-    renderCompaniesSection(section);
-  });
-
-  // Evento para agregar un nuevo producto
-  document.getElementById("add-product-btn").addEventListener("click", () => {
-    openAddProductModal(companyIndex);
-  });
-
-  // Eventos para editar y eliminar productos
-  document.querySelectorAll(".btn-edit-product").forEach(button => {
-    button.addEventListener("click", (e) => {
-      const companyIndex = e.target.getAttribute("data-company-index");
-      const productIndex = e.target.getAttribute("data-product-index");
-      openEditProductModal(companyIndex, productIndex);
+// Función para llenar los datos de prueba
+function fillTestData(step) {
+  if (step === 1) {
+    document.getElementById("nombre").value = "Tienda de Prueba";
+    document.getElementById("url").value = "tienda-prueba";
+  } else if (step === 2) {
+    document.getElementById("descripcion").value = "Descripción de prueba para la tienda.";
+    document.getElementById("direccion").value = "Calle Falsa 123";
+    document.getElementById("telefono").value = "1234567890";
+    document.getElementById("whatsapp").value = "1234567890";
+  } else if (step === 4) {
+    const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    dias.forEach(dia => {
+      document.getElementById(`apertura-${dia}`).value = "09:00";
+      document.getElementById(`cierre-${dia}`).value = "20:00";
+      document.getElementById(`envio-apertura-${dia}`).value = "10:00";
+      document.getElementById(`envio-cierre-${dia}`).value = "18:00";
     });
-  });
+  }
+}
 
-  document.querySelectorAll(".btn-delete-product").forEach(button => {
-    button.addEventListener("click", (e) => {
-      const companyIndex = e.target.getAttribute("data-company-index");
-      const productIndex = e.target.getAttribute("data-product-index");
-      deleteProduct(companyIndex, productIndex);
+// Función para manejar la creación de e-commerce
+function handleCreateEcommerce(e) {
+  e.preventDefault();
+  const form = e.target;
+  const step = parseInt(form.dataset.step);
+
+  if (step === 1) {
+    const nombre = document.getElementById("nombre").value;
+    const url = document.getElementById("url").value;
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const urlExists = loggedInUser.ecommerce.some(ecommerce => ecommerce.url === `store.html?tienda=${url}`);
+    
+    if (urlExists) {
+      const alert = new Modal({
+        title: "Error",
+        message: "La URL ya está en uso. Elige otra.",
+        buttonText: "Aceptar"
+      });
+      alert.createAlert();
+      return;
+    }
+
+    form.innerHTML = getStepContent(2);
+  } else if (step === 2) {
+    const descripcion = document.getElementById("descripcion").value;
+    const direccion = document.getElementById("direccion").value;
+    const telefono = document.getElementById("telefono").value;
+    const whatsapp = document.getElementById("whatsapp").value;
+
+    form.innerHTML = getStepContent(3);
+  } else if (step === 3) {
+    const socialMediaEntries = Array.from(document.querySelectorAll("#social-media-container div"));
+    const redesSociales = socialMediaEntries.map(entry => {
+      const [nombre, url] = entry.children;
+      return { nombre: nombre.value, url: url.value };
     });
-  });
+
+    form.innerHTML = getStepContent(4);
+  } else if (step === 4) {
+    const horarios = {};
+    const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    dias.forEach(dia => {
+      horarios[dia] = {
+        apertura: document.getElementById(`apertura-${dia}`).value,
+        cierre: document.getElementById(`cierre-${dia}`).value,
+        envioApertura: document.getElementById(`envio-apertura-${dia}`).value,
+        envioCierre: document.getElementById(`envio-cierre-${dia}`).value,
+      };
+    });
+
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    loggedInUser.ecommerce.push({
+      nombre: document.getElementById("nombre").value,
+      url: `store.html?tienda=${document.getElementById("url").value}`,
+      descripcion: document.getElementById("descripcion").value,
+      direccion: document.getElementById("direccion").value,
+      telefono: document.getElementById("telefono").value,
+      whatsapp: document.getElementById("whatsapp").value,
+      redesSociales: redesSociales,
+      horarios: horarios,
+    });
+
+    localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+
+    const alert = new Modal({
+      title: "Éxito",
+      message: "Tu e-commerce ha sido creado exitosamente.",
+      buttonText: "Aceptar"
+    });
+    alert.createAlert();
+  }
 }
 
-// Función para abrir el modal de agregar producto
-function openAddProductModal(companyIndex) {
-  const modal = new Modal({
-    title: "Agregar Producto",
-    content: `
-      <form id="add-product-form">
-        <label for="name">Nombre del Producto:</label>
-        <input type="text" id="name" required />
-        
-        <label for="type">Tipo de Producto:</label>
-        <input type="text" id="type" required />
-        
-        <label for="tag">Tags (separados por comas):</label>
-        <input type="text" id="tag" required />
-        
-        <label for="description">Descripción:</label>
-        <textarea id="description" required></textarea>
-        
-        <label for="price">Precio:</label>
-        <input type="number" id="price" required />
-        
-        <label for="image">Imagen (URL):</label>
-        <input type="text" id="image" required />
-        
-        <label for="promo">¿Producto en promoción?</label>
-        <input type="checkbox" id="promo" />
-        
-        <label for="alcoholic">¿Producto alcohólico?</label>
-        <input type="checkbox" id="alcoholic" />
-        
-        <button type="submit">Agregar Producto</button>
-      </form>
-    `,
-    buttonText: "Cerrar"
-  });
-
-  modal.createModal();
-
-  document.getElementById("add-product-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    addProduct(companyIndex);
-  });
-}
-
-// Función para agregar producto a la empresa
-function addProduct(companyIndex) {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-  const newProduct = {
-    id: Date.now(), // Genera un ID único basado en la fecha actual
-    type: document.getElementById("type").value,
-    tag: document.getElementById("tag").value.split(',').map(tag => tag.trim()),
-    name: document.getElementById("name").value,
-    description: document.getElementById("description").value,
-    price: parseFloat(document.getElementById("price").value),
-    image: document.getElementById("image").value,
-    promo: document.getElementById("promo").checked,
-    alcoholic: document.getElementById("alcoholic").checked
-  };
-
-  loggedInUser.empresas[companyIndex].productos.push(newProduct);
-  localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-
-  const alert = new Modal({
-    message: "Producto agregado exitosamente.",
-    buttonText: "Aceptar",
-    type: "success"
-  });
-  alert.createAlert();
-
-  renderProductList(document.querySelector("section"), companyIndex);
-}
-
-// Función para eliminar un producto
-function deleteProduct(companyIndex, productIndex) {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  const productName = loggedInUser.empresas[companyIndex].productos[productIndex].name;
-  loggedInUser.empresas[companyIndex].productos.splice(productIndex, 1);
-  localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-
-  const alert = new Modal({
-    message: `Producto "${productName}" eliminado exitosamente.`,
-    buttonText: "Aceptar",
-    type: "success"
-  });
-  alert.createAlert();
-
-  renderProductList(document.querySelector("section"), companyIndex);
-}
-
-// Función para abrir el modal de editar producto
-function openEditProductModal(companyIndex, productIndex) {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  const product = loggedInUser.empresas[companyIndex].productos[productIndex];
-
-  const modal = new Modal({
-    title: `Editar Producto: ${product.name}`,
-    content: `
-      <form id="edit-product-form">
-        <label for="name">Nombre del Producto:</label>
-        <input type="text" id="name" value="${product.name}" required />
-        
-        <label for="type">Tipo de Producto:</label>
-        <input type="text" id="type" value="${product.type}" required />
-        
-        <label for="tag">Tags (separados por comas):</label>
-        <input type="text" id="tag" value="${product.tag.join(', ')}" required />
-        
-        <label for="description">Descripción:</label>
-        <textarea id="description" required>${product.description}</textarea>
-        
-        <label for="price">Precio:</label>
-        <input type="number" id="price" value="${product.price}" required />
-        
-        <label for="image">Imagen (URL):</label>
-        <input type="text" id="image" value="${product.image}" required />
-        
-        <label for="promo">¿Producto en promoción?</label>
-        <input type="checkbox" id="promo" ${product.promo ? 'checked' : ''} />
-        
-        <label for="alcoholic">¿Producto alcohólico?</label>
-        <input type="checkbox" id="alcoholic" ${product.alcoholic ? 'checked' : ''} />
-        
-        <button type="submit">Guardar Cambios</button>
-      </form>
-    `,
-    buttonText: "Cerrar"
-  });
-
-  modal.createModal();
-
-  // Añadir el evento al formulario de edición
-  document.getElementById("edit-product-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    editProduct(companyIndex, productIndex);
-  });
-}
-
-// Función para editar producto
-function editProduct(companyIndex, productIndex) {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  const product = loggedInUser.empresas[companyIndex].productos[productIndex];
-
-  const updatedProduct = {
-    id: product.id, // Mantener el mismo ID
-    type: document.getElementById("type").value,
-    tag: document.getElementById("tag").value.split(',').map(tag => tag.trim()),
-    name: document.getElementById("name").value,
-    description: document.getElementById("description").value,
-    price: parseFloat(document.getElementById("price").value),
-    image: document.getElementById("image").value,
-    promo: document.getElementById("promo").checked,
-    alcoholic: document.getElementById("alcoholic").checked
-  };
-
-  // Actualizar el producto en el array
-  loggedInUser.empresas[companyIndex].productos[productIndex] = updatedProduct;
-  localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-
-  // Mostrar alerta de éxito
-  const alert = new Modal({
-    message: `Producto "${updatedProduct.name}" editado exitosamente.`,
-    buttonText: "Aceptar",
-    type: "success"
-  });
-  alert.createAlert();
-
-  // Volver a renderizar la lista de productos
-  renderProductList(document.querySelector("section"), companyIndex);
-}
+// Agregar evento al botón de "Llenar Datos de Prueba"
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.classList.contains("fill-data-btn")) {
+    const step = parseInt(e.target.closest("form").dataset.step);
+    fillTestData(step);
+  }
+});
