@@ -1,15 +1,12 @@
-/* Estilos de la página de usuario */
+/* Estilos de la página de usuario (Mobile First) */
 .user-section {
   width: 100%;
-  max-height: 200px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
   padding: 10px;
+  display: flex;
+  flex-direction: column; /* Columna en móviles */
+  align-items: center;
+  background-color: var(--background-color);
   border-radius: var(--std-borderRadius);
-  background-color: var(--background-color); /* Color de fondo opcional */
 }
 
 .user-section h1 {
@@ -21,17 +18,14 @@
 #profile-info {
   padding: 5px;
   display: flex;
-  flex-direction: row-reverse;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 10px;
 }
 
 #profile-info img {
-  width: 100%;
-  max-width: 50px;
-  max-height: 50px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-bottom: 10px;
 }
@@ -40,23 +34,23 @@
 .services-section {
   width: 100%;
   padding: 15px;
+  background-color: var(--background-color);
   border-radius: var(--std-borderRadius);
-  background-color: var(--background-color); /* Color de fondo opcional */
 }
 
 .services-section h3 {
-  width: 100%;
   text-align: center;
   margin-bottom: 10px;
 }
-#services-list{
-  width: 90%;
+
+#services-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin: 0 auto
+  margin: 0 auto;
 }
+
 .services-buttons-container {
   display: flex;
   flex-wrap: wrap;
@@ -65,8 +59,8 @@
 }
 
 .btn-services {
-  width: 100px; /* Tamaño más grande para mejor visibilidad */
-  height: 100px;
+  width: 80px; /* Ajustamos el tamaño para pantallas pequeñas */
+  height: 80px;
   background-color: var(--primary-color);
   color: var(--white-color);
   border: none;
@@ -75,7 +69,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px; /* Ajusta el tamaño del texto */
+  font-size: 12px; /* Reducimos el tamaño de la fuente */
   text-align: center;
 }
 
@@ -84,25 +78,43 @@
 }
 
 /* Estilos para las secciones de servicio */
-#service-content{
+#service-content {
   width: 100%;
 }
+
 .service-section {
   width: 100%;
-  padding: 20px;
+  padding: 15px;
   margin-top: 10px;
   border: 1px solid var(--font-color-light);
   border-radius: var(--std-borderRadius);
-  display: none; /* Por defecto, todas las secciones de servicio están ocultas */
+  display: none;
 }
 
 .service-section.active {
-  display: flex; /* Solo se mostrará la sección activa */
+  display: flex;
 }
 
 /* Listado de empresas */
+
 #company-list {
-  margin-top: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.company-card {
+  width: 300px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  box-shadow: var(--std-box-shadow);
+  border-radius: var(--std-borderRadius);
 }
 
 .company-item {
@@ -110,9 +122,10 @@
   border: 1px solid var(--font-color-light);
   border-radius: var(--std-borderRadius);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 10px;
+  align-items: center;
 }
 
 #company-details {
@@ -129,7 +142,7 @@ button#add-product-btn {
 button#edit-company-btn,
 button#delete-company-btn {
   margin-top: 10px;
-  margin-right: 10px;
+  width: 100%;
 }
 
 button#delete-company-btn {
@@ -138,4 +151,115 @@ button#delete-company-btn {
 
 button#delete-company-btn:hover {
   background-color: var(--danger-color-hover);
+}
+
+/* Formulario Crear Empresa */
+#create-company-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#create-company-form label {
+  text-align: left;
+  width: 100%;
+}
+
+#create-company-form input, 
+#create-company-form textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--std-borderRadius);
+}
+
+/* Redes sociales en formulario */
+#social-media-section {
+  display: flex;
+  flex-direction: column;
+}
+
+#social-media-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-media-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* productos */
+
+#products-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.product-card {
+  width: 300px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--std-box-shadow);
+  border-radius: var(--std-borderRadius);
+}
+
+
+/* Media Queries  */
+@media (min-width: 768px) {
+  
+  .user-section {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  #profile-info {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .btn-services {
+    width: 100px;
+    height: 100px;
+    font-size: 14px;
+  }
+
+  .company-item {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  #create-company-form {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  #create-company-form label {
+    width: 30%;
+  }
+
+  #create-company-form input,
+  #create-company-form textarea {
+    width: 65%;
+  }
+
+  .social-media-entry {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .social-media-entry input {
+    flex: 1;
+  }
+
+  .remove-social-media-btn {
+    margin-left: 10px;
+  }
 }
